@@ -27,6 +27,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from core.assets import get_asset_path
 from core.config_manager import ConfigManager
 from core.event_handler import EventHandler
 from core.keyboard_listener import KeyboardListener
@@ -339,12 +340,7 @@ class MainWindow(QMainWindow):
         """Start or resume the keyboard listener and event pipeline."""
         if not self.sound_engine.is_ready():
             # Attempt to reload shotgun.wav in case user placed it after startup
-            try:
-                from main import get_asset_path
-                audio_path = get_asset_path("shotgun.wav")
-            except Exception:
-                audio_path = Path(__file__).resolve().parent.parent / "shotgun.wav"
-
+            audio_path = get_asset_path("shotgun.wav")
             try:
                 self.sound_engine.load_audio(audio_path)
             except Exception as e:
@@ -384,12 +380,7 @@ class MainWindow(QMainWindow):
     def _on_test_clicked(self) -> None:
         """Trigger a test sound and display the software processing latency."""
         if not self.sound_engine.is_ready():
-            try:
-                from main import get_asset_path
-                audio_path = get_asset_path("shotgun.wav")
-            except Exception:
-                audio_path = Path(__file__).resolve().parent.parent / "shotgun.wav"
-
+            audio_path = get_asset_path("shotgun.wav")
             try:
                 self.sound_engine.load_audio(audio_path)
             except Exception as e:
@@ -440,10 +431,10 @@ class MainWindow(QMainWindow):
         """Configure system startup integration."""
         self.config_manager.set("launch_on_startup", checked)
         if sys.platform == "win32":
-            from platform.windows import set_launch_on_startup
+            from platforms.windows import set_launch_on_startup
             set_launch_on_startup(checked)
         elif sys.platform == "darwin":
-            from platform.macos import set_launch_on_startup
+            from platforms.macos import set_launch_on_startup
             set_launch_on_startup(checked)
 
     def _on_toggle_pause(self) -> None:

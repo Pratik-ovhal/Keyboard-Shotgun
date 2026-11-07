@@ -44,6 +44,8 @@ $PYTHON_CMD -m pyinstaller \
     --clean \
     --osx-bundle-identifier="com.keyboardshotgun.app" \
     "${DATA_ARGS[@]}" \
+    --hidden-import="platforms" \
+    --hidden-import="platforms.macos" \
     --hidden-import="pynput.keyboard._darwin" \
     --hidden-import="pynput.mouse._darwin" \
     --hidden-import="pygame" \

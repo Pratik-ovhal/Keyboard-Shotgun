@@ -8,10 +8,13 @@ import logging
 import queue
 import threading
 import time
-from typing import Callable, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
-from core.config_manager import ConfigManager
-from core.sound_engine import SoundEngine
+from core.interfaces import ConfigProvider, SoundPlayer
+
+if TYPE_CHECKING:
+    from core.config_manager import ConfigManager
+    from core.sound_engine import SoundEngine
 
 logger = logging.getLogger("KeyboardShotgun.EventHandler")
 
@@ -25,8 +28,8 @@ class AudioWorker(threading.Thread):
     def __init__(
         self,
         event_queue: queue.Queue,
-        sound_engine: SoundEngine,
-        config_manager: ConfigManager,
+        sound_engine: SoundPlayer,
+        config_manager: ConfigProvider,
         on_sound_played: Optional[Callable[[float], None]] = None,
     ) -> None:
         super().__init__(daemon=True, name="AudioWorkerThread")
@@ -113,8 +116,8 @@ class EventHandler:
 
     def __init__(
         self,
-        sound_engine: SoundEngine,
-        config_manager: ConfigManager,
+        sound_engine: SoundPlayer,
+        config_manager: ConfigProvider,
         max_queue_size: int = 128,
         on_sound_played: Optional[Callable[[float], None]] = None,
     ) -> None:

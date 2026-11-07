@@ -55,6 +55,8 @@ KeyboardShotgun/
 │
 ├── core/
 │   ├── __init__.py
+│   ├── assets.py               # Central asset path resolution
+│   ├── interfaces.py           # Decoupled component protocols
 │   ├── sound_engine.py         # Pygame audio engine & NumPy pitch shifting
 │   ├── keyboard_listener.py    # Global pynput listener with key-repeat filter
 │   ├── event_handler.py        # Asynchronous event queue and audio worker
@@ -66,8 +68,8 @@ KeyboardShotgun/
 │   ├── tray_manager.py         # System tray icon, notifications, & menu
 │   └── styles.py               # Custom QSS stylesheet
 │
-├── platform/
-│   ├── __init__.py             # Cross-platform compatibility layer
+├── platforms/
+│   ├── __init__.py             # Platform package
 │   ├── windows.py              # Windows startup registry integration
 │   └── macos.py                # macOS accessibility checks & LaunchAgents
 │

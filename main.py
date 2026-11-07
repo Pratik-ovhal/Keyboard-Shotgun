@@ -14,6 +14,7 @@ from pathlib import Path
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication, QMessageBox
 
+from core.assets import get_asset_path
 from core.config_manager import ConfigManager
 from core.event_handler import EventHandler
 from core.keyboard_listener import KeyboardListener
@@ -35,24 +36,12 @@ logging.basicConfig(
 logger = logging.getLogger("KeyboardShotgun")
 
 
-def get_asset_path(filename: str) -> Path:
-    """Resolve asset path for development and PyInstaller bundled environments."""
-    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
-        # PyInstaller bundled extraction directory
-        base_dir = Path(sys._MEIPASS)
-    else:
-        # Source directory (directory containing main.py)
-        base_dir = Path(__file__).resolve().parent
-
-    return base_dir / filename
-
-
 def check_platform_permissions(config_manager: ConfigManager) -> None:
     """Verify platform-specific permissions (e.g. macOS Accessibility)."""
     notify_enabled = config_manager.get("show_permission_notifications", True)
 
     if sys.platform == "darwin":
-        from platform.macos import check_permissions
+        from platforms.macos import check_permissions
         has_perm, msg = check_permissions()
         if not has_perm:
             logger.warning(f"macOS Permission Notice:\n{msg}")
@@ -63,7 +52,7 @@ def check_platform_permissions(config_manager: ConfigManager) -> None:
                     msg
                 )
     elif sys.platform == "win32":
-        from platform.windows import check_permissions
+        from platforms.windows import check_permissions
         has_perm, msg = check_permissions()
         if not has_perm:
             logger.warning(f"Windows Permission Warning: {msg}")

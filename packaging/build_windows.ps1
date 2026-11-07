@@ -55,6 +55,8 @@ Write-Host "Executing PyInstaller build..." -ForegroundColor Green
     --noconfirm `
     --clean `
     @DataArgs `
+    --hidden-import="platforms" `
+    --hidden-import="platforms.windows" `
     --hidden-import="pynput.keyboard._win32" `
     --hidden-import="pynput.mouse._win32" `
     --hidden-import="pygame" `
