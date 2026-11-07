@@ -23,37 +23,16 @@ ARCH=$($PYTHON_CMD -c "import platform; print(platform.machine())")
 echo "Building for target architecture: $ARCH"
 
 # Check PyInstaller
-if ! $PYTHON_CMD -m pyinstaller --version >/dev/null 2>&1; then
+if ! $PYTHON_CMD -m PyInstaller --version >/dev/null 2>&1; then
     echo "Installing PyInstaller..."
     $PYTHON_CMD -m pip install pyinstaller
 fi
 
-DATA_ARGS=()
-if [ -f "$PROJECT_ROOT/config.json" ]; then
-    DATA_ARGS+=("--add-data=config.json:.")
-fi
-if [ -f "$PROJECT_ROOT/shotgun.wav" ]; then
-    DATA_ARGS+=("--add-data=shotgun.wav:.")
-fi
-
-echo "Running PyInstaller..."
-$PYTHON_CMD -m pyinstaller \
-    --name="KeyboardShotgun" \
-    --windowed \
+echo "Running PyInstaller using KeyboardShotgun.spec..."
+$PYTHON_CMD -m PyInstaller \
     --noconfirm \
     --clean \
-    --osx-bundle-identifier="com.keyboardshotgun.app" \
-    "${DATA_ARGS[@]}" \
-    --hidden-import="platforms" \
-    --hidden-import="platforms.macos" \
-    --hidden-import="pynput.keyboard._darwin" \
-    --hidden-import="pynput.mouse._darwin" \
-    --hidden-import="pygame" \
-    --hidden-import="numpy" \
-    --hidden-import="PySide6.QtCore" \
-    --hidden-import="PySide6.QtGui" \
-    --hidden-import="PySide6.QtWidgets" \
-    main.py
+    KeyboardShotgun.spec
 
 echo ""
 echo "========================================"
