@@ -32,7 +32,7 @@ venv.bak/
 
 # PyInstaller
 *.manifest
-*.spec
+
 
 # Pytest / Coverage
 .pytest_cache/
