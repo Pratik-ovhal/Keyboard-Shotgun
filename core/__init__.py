@@ -1,0 +1,2 @@
+"""Keyboard Shotgun core package."""
+

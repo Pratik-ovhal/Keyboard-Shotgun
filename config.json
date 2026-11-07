@@ -1,0 +1,14 @@
+{
+  "master_volume": 0.8,
+  "is_muted": false,
+  "pitch_variation_enabled": true,
+  "pitch_intensity": 0.08,
+  "num_variations": 10,
+  "max_channels": 8,
+  "cooldown_duration": 0.0,
+  "start_in_background": false,
+  "minimize_to_tray": true,
+  "launch_on_startup": false,
+  "show_permission_notifications": true
+}
+
