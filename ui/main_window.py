@@ -661,7 +661,7 @@ class MainWindow(QMainWindow):
         btn_github.setCursor(Qt.CursorShape.PointingHandCursor)
         btn_github.setFixedWidth(180)
         btn_github.clicked.connect(
-            lambda: QDesktopServices.openUrl(QUrl("https://github.com/Pratik-ovhal/Keyboard-Gun"))
+            lambda: QDesktopServices.openUrl(QUrl("https://github.com/Pratik-ovhal/Keyboard-Shotgun"))
         )
 
         id_layout.addWidget(app_name_lbl)

@@ -39,6 +39,10 @@ venv.bak/
 .coverage
 htmlcov/
 
+# Scratch & temporary verification files
+scratch/
+
+
 # IDE / OS
 .idea/
 .vscode/

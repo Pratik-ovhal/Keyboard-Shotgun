@@ -85,6 +85,10 @@ jobs:
           import core.keyboard_listener
           import core.sound_engine
           import ui
+          import ui.components
+          import ui.components.icons
+          import ui.components.toggle_switch
+          import ui.components.wave_visualizer
           import ui.main_window
           import ui.styles
           import ui.tray_manager
