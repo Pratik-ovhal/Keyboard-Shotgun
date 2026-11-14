@@ -1,27 +1,12 @@
 # -*- mode: python ; coding: utf-8 -*-
-import sys
 
-is_darwin = sys.platform == 'darwin'
-
-platform_hidden = (
-    ['platforms.macos', 'pynput.keyboard._darwin', 'pynput.mouse._darwin']
-    if is_darwin
-    else ['platforms.windows', 'pynput.keyboard._win32', 'pynput.mouse._win32']
-)
 
 a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
     datas=[('config.json', '.'), ('shotgun.wav', '.')],
-    hiddenimports=[
-        'platforms',
-        'pygame',
-        'numpy',
-        'PySide6.QtCore',
-        'PySide6.QtGui',
-        'PySide6.QtWidgets',
-    ] + platform_hidden,
+    hiddenimports=['platforms', 'platforms.windows', 'pynput.keyboard._win32', 'pynput.mouse._win32', 'pygame', 'numpy', 'PySide6.QtCore', 'PySide6.QtGui', 'PySide6.QtWidgets'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -57,21 +42,3 @@ coll = COLLECT(
     upx_exclude=[],
     name='KeyboardShotgun',
 )
-
-if is_darwin:
-    app = BUNDLE(
-        coll,
-        name='KeyboardShotgun.app',
-        icon=None,
-        bundle_identifier='com.keyboardshotgun.app',
-        info_plist={
-            'CFBundleName': 'Keyboard Shotgun',
-            'CFBundleDisplayName': 'Keyboard Shotgun',
-            'CFBundleIdentifier': 'com.keyboardshotgun.app',
-            'CFBundleVersion': '1.0.0',
-            'CFBundleShortVersionString': '1.0.0',
-            'NSAppleEventsUsageDescription': 'Keyboard Shotgun requires Accessibility permission to detect global keypresses.',
-            'NSInputMonitoringUsageDescription': 'Keyboard Shotgun requires Input Monitoring permission to detect global keypresses.',
-        },
-    )
-
