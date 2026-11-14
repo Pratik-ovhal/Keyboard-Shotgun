@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Optional
 
 from PySide6.QtCore import QSize, Qt, QTimer, QUrl, Signal
-from PySide6.QtGui import QCloseEvent, QDesktopServices, QFont, QIcon
+from PySide6.QtGui import QCloseEvent, QDesktopServices, QFont, QIcon, QPixmap
 from PySide6.QtWidgets import (
     QApplication,
     QButtonGroup,
@@ -134,9 +134,20 @@ class MainWindow(QMainWindow):
         brand_layout = QHBoxLayout()
         brand_layout.setSpacing(10)
 
-        brand_dot = QFrame()
-        brand_dot.setFixedSize(10, 10)
-        brand_dot.setStyleSheet("background-color: #D4F63D; border-radius: 5px;")
+        logo_path = get_asset_path("logo.png")
+        if logo_path.exists():
+            brand_logo = QLabel()
+            brand_pix = QPixmap(str(logo_path.resolve())).scaled(
+                22, 22, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation
+            )
+            brand_logo.setPixmap(brand_pix)
+            brand_logo.setStyleSheet("background-color: #FFFFFF; border-radius: 4px; padding: 1px;")
+            brand_layout.addWidget(brand_logo)
+        else:
+            brand_dot = QFrame()
+            brand_dot.setFixedSize(10, 10)
+            brand_dot.setStyleSheet("background-color: #D4F63D; border-radius: 5px;")
+            brand_layout.addWidget(brand_dot)
 
         brand_label = QLabel("Shotgun")
         brand_font = QFont()
@@ -145,7 +156,6 @@ class MainWindow(QMainWindow):
         brand_label.setFont(brand_font)
         brand_label.setStyleSheet("color: #FFFFFF; letter-spacing: 0.5px;")
 
-        brand_layout.addWidget(brand_dot)
         brand_layout.addWidget(brand_label)
         brand_layout.addStretch()
 
@@ -637,6 +647,23 @@ class MainWindow(QMainWindow):
         id_layout.setContentsMargins(22, 22, 22, 22)
         id_layout.setSpacing(14)
 
+        header_brand_row = QHBoxLayout()
+        header_brand_row.setSpacing(16)
+
+        logo_path = get_asset_path("logo.png")
+        if logo_path.exists():
+            about_logo_lbl = QLabel()
+            about_logo_pix = QPixmap(str(logo_path.resolve())).scaled(
+                56, 56, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation
+            )
+            about_logo_lbl.setPixmap(about_logo_pix)
+            about_logo_lbl.setFixedSize(56, 56)
+            about_logo_lbl.setStyleSheet("background-color: #FFFFFF; border-radius: 10px; padding: 3px;")
+            header_brand_row.addWidget(about_logo_lbl)
+
+        id_text_box = QVBoxLayout()
+        id_text_box.setSpacing(3)
+
         app_name_lbl = QLabel("Keyboard Shotgun")
         name_font = QFont()
         name_font.setPointSize(16)
@@ -646,6 +673,13 @@ class MainWindow(QMainWindow):
 
         ver_lbl = QLabel("Version 1.2.0 • Standalone Production Release")
         ver_lbl.setStyleSheet("color: #D4F63D; font-weight: 600; font-size: 12px;")
+
+        id_text_box.addWidget(app_name_lbl)
+        id_text_box.addWidget(ver_lbl)
+        header_brand_row.addLayout(id_text_box)
+        header_brand_row.addStretch()
+
+        id_layout.addLayout(header_brand_row)
 
         desc_lbl = QLabel(
             "A high-performance tactile desktop audio utility that delivers dynamic, "

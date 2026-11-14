@@ -11,9 +11,21 @@ logger = logging.getLogger("KeyboardShotgun.TrayManager")
 
 
 def create_default_tray_icon() -> QIcon:
-    """Generate a clean procedural icon (64x64) with a shotgun target / blast design."""
+    """Load application logo or generate a clean procedural fallback icon."""
+    try:
+        from core.assets import get_asset_path
+        logo_path = get_asset_path("logo.png")
+        if logo_path.exists() and logo_path.stat().st_size > 0:
+            icon = QIcon(str(logo_path.resolve()))
+            if not icon.isNull():
+                return icon
+    except Exception as e:
+        logger.debug(f"Could not load logo.png: {e}")
+
+    # Fallback procedural icon
     pixmap = QPixmap(64, 64)
     pixmap.fill(QColor(0, 0, 0, 0))  # transparent background
+
 
     painter = QPainter(pixmap)
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)

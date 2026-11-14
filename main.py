@@ -25,7 +25,7 @@ from core.sound_engine import (
     SoundEngine,
 )
 from ui.main_window import MainWindow
-from ui.tray_manager import TrayManager
+from ui.tray_manager import TrayManager, create_default_tray_icon
 
 # Setup application logging
 logging.basicConfig(
@@ -69,10 +69,19 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    # Set explicit AppUserModelID on Windows so taskbar displays application icon
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("keyboardshotgun.desktop.app")
+        except Exception:
+            pass
+
     # Create or reuse PySide6 application
     app = QApplication.instance() or QApplication(sys.argv)
     app.setApplicationName("Keyboard Shotgun")
     app.setQuitOnLastWindowClosed(False)
+    app.setWindowIcon(create_default_tray_icon())
 
     # 1. Load configuration
     config_file_path = get_asset_path("config.json")

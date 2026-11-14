@@ -37,39 +37,29 @@ if (-not (Test-Path "$ProjectRoot\shotgun.wav")) {
     Write-Host "NOTE: shotgun.wav is not present in root yet. Ensure shotgun.wav is placed alongside the built executable." -ForegroundColor Yellow
 }
 
-# PyInstaller command:
-# Include shotgun.wav and config.json as data assets if present
-$DataArgs = @()
-if (Test-Path "$ProjectRoot\config.json") {
-    $DataArgs += "--add-data=config.json;."
-}
-if (Test-Path "$ProjectRoot\shotgun.wav") {
-    $DataArgs += "--add-data=shotgun.wav;."
+# Ensure logo.ico exists for executable icon
+if (-not (Test-Path "$ProjectRoot\logo.ico") -and (Test-Path "$ProjectRoot\logo.png")) {
+    Write-Host "Generating logo.ico from logo.png..." -ForegroundColor Cyan
+    & $PythonPath -c "from PySide6.QtGui import QImage; from PySide6.QtCore import Qt; img = QImage('logo.png').scaled(256, 256, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation); img.save('logo.ico', 'ICO')"
 }
 
-Write-Host "Executing PyInstaller build..." -ForegroundColor Green
+Write-Host "Executing PyInstaller build using KeyboardShotgun.spec..." -ForegroundColor Green
 & $PythonPath -m PyInstaller `
-    --name="KeyboardShotgun" `
-    --onedir `
-    --windowed `
     --noconfirm `
     --clean `
-    @DataArgs `
-    --hidden-import="platforms" `
-    --hidden-import="platforms.windows" `
-    --hidden-import="pynput.keyboard._win32" `
-    --hidden-import="pynput.mouse._win32" `
-    --hidden-import="pygame" `
-    --hidden-import="numpy" `
-    --hidden-import="PySide6.QtCore" `
-    --hidden-import="PySide6.QtGui" `
-    --hidden-import="PySide6.QtWidgets" `
-    main.py
+    KeyboardShotgun.spec
 
 if ($LASTEXITCODE -eq 0) {
+    # Ensure assets are copied to dist root alongside executable
+    Copy-Item -Path "$ProjectRoot\shotgun.wav" -Destination "$ProjectRoot\dist\KeyboardShotgun\" -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path "$ProjectRoot\config.json" -Destination "$ProjectRoot\dist\KeyboardShotgun\" -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path "$ProjectRoot\logo.png" -Destination "$ProjectRoot\dist\KeyboardShotgun\" -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path "$ProjectRoot\logo.ico" -Destination "$ProjectRoot\dist\KeyboardShotgun\" -Force -ErrorAction SilentlyContinue
+
     Write-Host "`n========================================" -ForegroundColor Green
     Write-Host "Build complete! Executable located at: dist\KeyboardShotgun\KeyboardShotgun.exe" -ForegroundColor Green
-    Write-Host "If shotgun.wav was not embedded, make sure to copy shotgun.wav into dist\KeyboardShotgun\" -ForegroundColor Yellow
+    Write-Host "Application icon and runtime assets successfully bundled." -ForegroundColor Green
+    Write-Host "========================================" -ForegroundColor Green
     Write-Host "========================================" -ForegroundColor Green
 } else {
     Write-Host "PyInstaller build failed with exit code $LASTEXITCODE" -ForegroundColor Red
